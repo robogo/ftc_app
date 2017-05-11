@@ -61,7 +61,7 @@ public class AidanbotTeleop extends LinearOpMode {
     HardwarePushbot robot           = new HardwarePushbot();   // Use a Pushbot's hardware
                                                                // could also use HardwarePushbotMatrix class.
     double          clawOffset      = 0;                       // Servo mid position
-    final double    CLAW_SPEED      = 0.02 ;                   // sets rate to move servo
+    final double    CLAW_SPEED      = 0.04 ;                   // sets rate to move servo
 
     @Override
     public void runOpMode() {
@@ -75,7 +75,7 @@ public class AidanbotTeleop extends LinearOpMode {
         robot.init(hardwareMap);
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Hello Driver");    //
+        telemetry.addData("Say", "Hello pooop");    //
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
