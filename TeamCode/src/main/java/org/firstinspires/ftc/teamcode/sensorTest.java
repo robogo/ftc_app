@@ -60,7 +60,6 @@ public class sensorTest extends OpMode {
 }
 
 /*WHITE
-
 sensor: 0.4
 sensor RAW: 2
 BLACK
