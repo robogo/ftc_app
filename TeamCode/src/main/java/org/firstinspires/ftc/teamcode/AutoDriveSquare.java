@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
@@ -11,27 +13,39 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 /**
  * Created by aidan on 5/24/2017.
  */
-
+@Autonomous(name = "porportionalLinefollower", group = "Aidan")
 public class AutoDriveSquare extends LinearOpMode {
     HardwarePushbot robot = new HardwarePushbot();
-    OpticalDistanceSensor linesensor;
-double constantSpeed = 0.5;
-double perfectValue = 0.2;
+    OpticalDistanceSensor lineSensor;
+
+    {
+    }
+
+    ;
+    double constantSpeed = 0.3;
+
     @Override
     public void runOpMode() {
         robot.init(hardwareMap);
-        while (true) {
-            robot.leftMotor.setPower(constantSpeed);
-            robot.rightMotor.setPower(constantSpeed);
-            double correction = perfectValue - linesensor.getLightDetected();
-if (correction <= 0){
-    robot.leftMotor.setPower(constantSpeed - correction);
-}
-else{
-    robot.rightMotor.setPower(constantSpeed + correction);
-}
+        lineSensor = hardwareMap.opticalDistanceSensor.get("sensor_ods"); // names of the stuff we need to set in the config.
+        lineSensor.enableLed(true);
+        double leftPower;
+        double rightPower;
+        this.waitForStart();
+        while (opModeIsActive()) {
+            double a = lineSensor.getLightDetected();
+            double correction = 0.2 - a;
+            if (correction <= 0.1) {
+                leftPower = (constantSpeed - correction);
+                rightPower= (constantSpeed);
+            } else {
+                leftPower = (constantSpeed + correction);
+                rightPower = (constantSpeed);
+            }
+            robot.leftMotor.setPower(leftPower);
+            robot.rightMotor.setPower(rightPower);
         }
-        }
+    }
 
 }
 
