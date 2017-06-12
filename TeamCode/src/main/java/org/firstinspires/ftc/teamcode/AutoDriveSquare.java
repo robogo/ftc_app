@@ -18,11 +18,7 @@ public class AutoDriveSquare extends LinearOpMode {
     HardwarePushbot robot = new HardwarePushbot();
     OpticalDistanceSensor lineSensor;
 
-    {
-    }
-
-    ;
-    double constantSpeed = 0.3;
+    final static double CONSTANT_SPEED = 0.3;
 
     @Override
     public void runOpMode() {
@@ -36,11 +32,11 @@ public class AutoDriveSquare extends LinearOpMode {
             double a = lineSensor.getLightDetected();
             double correction = 0.2 - a;
             if (correction <= 0.1) {
-                leftPower = (constantSpeed - correction);
-                rightPower= (constantSpeed);
+                leftPower = CONSTANT_SPEED - correction;
+                rightPower = CONSTANT_SPEED;
             } else {
-                leftPower = (constantSpeed + correction);
-                rightPower = (constantSpeed);
+                leftPower = CONSTANT_SPEED + correction;
+                rightPower = CONSTANT_SPEED;
             }
             robot.leftMotor.setPower(leftPower);
             robot.rightMotor.setPower(rightPower);
