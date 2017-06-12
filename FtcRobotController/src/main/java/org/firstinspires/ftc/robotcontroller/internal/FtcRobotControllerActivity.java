@@ -423,7 +423,7 @@ public class FtcRobotControllerActivity extends Activity {
     // (e.g.: no one can screw things up by messing with the contents of the config file) fix is
     // to do away with configuration file entirely.
 
-    networkType = NetworkType.WIFIDIRECT;
+    networkType = NetworkType.WIFI;
     programmingModeController.setCurrentNetworkType(networkType);
 
     // update the preferences

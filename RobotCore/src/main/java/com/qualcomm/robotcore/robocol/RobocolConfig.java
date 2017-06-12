@@ -93,8 +93,7 @@ public class RobocolConfig {
           }
         }
       } catch (SocketException e) {
-        RobotLog.v(String.format("socket exception while trying to get network interface of %s",
-            address.getHostAddress()));
+        RobotLog.v(String.format("socket exception while trying to get network interface of %s", address.getHostAddress()));
       }
     }
 

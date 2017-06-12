@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.RobotLog;
 import com.qualcomm.robotcore.util.ThreadPool;
 import com.qualcomm.robotcore.wifi.NetworkConnection;
+import com.qualcomm.robotcore.wifi.NetworkType;
 
 import java.net.SocketException;
 import java.util.concurrent.CountDownLatch;
@@ -51,7 +52,8 @@ public class SetupRunnable implements Runnable
                     if (socket != null) socket.close();
                     socket = new RobocolDatagramSocket();
                     socket.listenUsingDestination(networkConnection.getConnectionOwnerAddress());
-                    if (socketConnect==SocketConnect.CONNECTION_OWNER) {
+                    if (socketConnect==SocketConnect.CONNECTION_OWNER ||
+                            networkConnection.getNetworkType() == NetworkType.WIFI) {
                         socket.connect(networkConnection.getConnectionOwnerAddress());
                     }
                 } catch (SocketException e) {

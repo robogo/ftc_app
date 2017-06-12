@@ -1,2 +1,2 @@
-include ':FtcRobotController', ':RobotCore'
+include ':FtcRobotController', ':RobotCore', ':DriverStationConsole'
 include ':TeamCode'

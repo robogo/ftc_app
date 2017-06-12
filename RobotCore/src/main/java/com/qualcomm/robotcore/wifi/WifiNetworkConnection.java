@@ -10,40 +10,48 @@ import android.net.DhcpInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 
+import com.qualcomm.robotcore.robocol.PeerDiscoveryManager;
+import com.qualcomm.robotcore.robocol.RobocolDatagramSocket;
+import com.qualcomm.robotcore.util.Network;
 import com.qualcomm.robotcore.util.RobotLog;
+import com.qualcomm.robotcore.util.ThreadPool;
 
+import org.firstinspires.ftc.robotcore.internal.network.NetworkConnectionHandler;
+import org.firstinspires.ftc.robotcore.internal.network.RecvLoopRunnable;
+import org.firstinspires.ftc.robotcore.internal.network.SocketConnect;
+
+import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
 
-public class WifiNetworkConnection extends NetworkConnection implements WifiAssistant.WifiAssistantCallback {
+public class WifiNetworkConnection extends NetworkConnection {
+    private static final int PORT = 45671;
     private static WifiNetworkConnection wifiConnection = null;
     private final List<ScanResult> scanResults = new ArrayList();
-    private final WifiAssistant assistant;
     private Context context;
     private WifiManager wifi;
     private NetworkConnectionCallback callback;
-    private ConnectStatus status;
-    private String faultReason;
+    private InetAddress remote;
 
     public static synchronized NetworkConnection getWifiConnection(Context context) {
         if(wifiConnection == null) {
             wifiConnection = new WifiNetworkConnection(context);
         }
-
         return wifiConnection;
     }
 
     private WifiNetworkConnection(Context context) {
         this.callback = null;
         this.context = context;
-        this.assistant = new WifiAssistant(context, this);
         this.wifi = (WifiManager) this.context.getSystemService(Context.WIFI_SERVICE);
-        this.status = ConnectStatus.NOT_CONNECTED;
+        this.start();
     }
 
     public List<ScanResult> getScanResults() {
@@ -55,11 +63,9 @@ public class WifiNetworkConnection extends NetworkConnection implements WifiAssi
     }
 
     public void enable() {
-        this.assistant.enable();
     }
 
     public void disable() {
-        this.assistant.disable();
     }
 
     public void setCallback(NetworkConnectionCallback callback) {
@@ -84,7 +90,7 @@ public class WifiNetworkConnection extends NetworkConnection implements WifiAssi
     }
 
     public InetAddress getConnectionOwnerAddress() {
-        return null;
+        return remote;
     }
 
     public String getConnectionOwnerName() {
@@ -96,7 +102,7 @@ public class WifiNetworkConnection extends NetworkConnection implements WifiAssi
     }
 
     public boolean isConnected() {
-        return this.status == ConnectStatus.CONNECTED;
+        return this.remote != null;
     }
 
     public String getDeviceName() {
@@ -130,7 +136,7 @@ public class WifiNetworkConnection extends NetworkConnection implements WifiAssi
     }
 
     public String getFailureReason() {
-        return faultReason;
+        return "unknown";
     }
 
     public String getPassphrase() {
@@ -138,12 +144,39 @@ public class WifiNetworkConnection extends NetworkConnection implements WifiAssi
     }
 
     public ConnectStatus getConnectStatus() {
-        return status;
+        return remote != null ? ConnectStatus.CONNECTED : ConnectStatus.NOT_CONNECTED;
     }
 
-    @Override
-    public void wifiEventCallback(WifiAssistant.WifiState event) {
-        this.status = event == WifiAssistant.WifiState.CONNECTED ?
-            ConnectStatus.CONNECTED : ConnectStatus.NOT_CONNECTED;
+    private InetAddress getBroadcastAddress() throws UnknownHostException {
+        DhcpInfo dhcp = wifi.getDhcpInfo();
+        int broadcast = (dhcp.ipAddress & dhcp.netmask) | ~dhcp.netmask;
+        RobotLog.i("My address %s broadcast address %s", getIpAddressAsString(dhcp.ipAddress), getIpAddressAsString(broadcast));
+        return getAddress(broadcast);
+    }
+
+    private void start() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    byte[] buf = new byte[64];
+                    RobotLog.i("Waiting for message from driver station console");
+                    DatagramSocket socket = new DatagramSocket(PORT, InetAddress.getByName("0.0.0.0"));
+                    socket.setBroadcast(true);
+                    DatagramPacket dgp = new DatagramPacket(buf, buf.length);
+                    socket.receive(dgp);
+                    remote = dgp.getAddress();
+                    RobotLog.i("Received packet from " + remote.toString());
+                    socket.close();
+                    if (callback != null) {
+                        callback.onNetworkConnectionEvent(Event.CONNECTION_INFO_AVAILABLE);
+                    }
+                } catch (SocketException e) {
+                    RobotLog.e("Failed to open socket: " + e.toString());
+                } catch (IOException e) {
+                    RobotLog.e("Failed to receive: " + e.toString());
+                }
+            }
+        }).start();
     }
 }
