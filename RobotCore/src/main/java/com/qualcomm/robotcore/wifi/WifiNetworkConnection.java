@@ -51,6 +51,7 @@ public class WifiNetworkConnection extends NetworkConnection {
         this.callback = null;
         this.context = context;
         this.wifi = (WifiManager) this.context.getSystemService(Context.WIFI_SERVICE);
+        RobotLog.i("WifiNetworkConnection starting...");
         this.start();
     }
 
@@ -159,6 +160,9 @@ public class WifiNetworkConnection extends NetworkConnection {
             @Override
             public void run() {
                 try {
+                    for (InetAddress a : Network.getLocalIpAddresses()) {
+                        RobotLog.i("Local address %s", a.toString());
+                    }
                     byte[] buf = new byte[64];
                     RobotLog.i("Waiting for message from driver station console");
                     DatagramSocket socket = new DatagramSocket(PORT, InetAddress.getByName("0.0.0.0"));
@@ -166,7 +170,7 @@ public class WifiNetworkConnection extends NetworkConnection {
                     DatagramPacket dgp = new DatagramPacket(buf, buf.length);
                     socket.receive(dgp);
                     remote = dgp.getAddress();
-                    RobotLog.i("Received packet from " + remote.toString());
+                    RobotLog.i("Received packet from %s:%d", remote.toString(), dgp.getPort());
                     socket.close();
                     if (callback != null) {
                         callback.onNetworkConnectionEvent(Event.CONNECTION_INFO_AVAILABLE);

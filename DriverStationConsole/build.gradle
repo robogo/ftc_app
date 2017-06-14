@@ -3,7 +3,7 @@ apply plugin: 'application'
 mainClassName = "com.robogo.Console"
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(dir: '../libs', include: ['gson-2.8.0.jar'])
 }
 
 sourceCompatibility = "1.7"
