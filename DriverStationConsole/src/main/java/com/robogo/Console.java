@@ -105,9 +105,9 @@ public class Console implements DriverStation.EventHandler {
 
         public void setTelemetry(Telemetry tele) {
             telemetry.setText("");
-            telemetry.append(String.format("robot: %d\n", tele.getRobotState()));
+            telemetry.append(String.format("Robot status: %d\n", tele.getRobotState()));
             for (Frame.StringMap.Entry entry : tele.strings().entrySet()) {
-                telemetry.append(String.format("%s=%s\n", entry.getKey(), entry.getValue()));
+                telemetry.append(String.format("%s\n", entry.getValue()));
             }
             for (Frame.StringMap.Entry entry : tele.numbers().entrySet()) {
                 telemetry.append(String.format("%s=%f\n", entry.getKey(), entry.getValue()));

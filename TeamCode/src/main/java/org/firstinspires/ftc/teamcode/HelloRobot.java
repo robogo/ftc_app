@@ -11,7 +11,9 @@ public class HelloRobot extends OpMode {
 
     @Override
     public void loop() {
-        telemetry.addData("Hello", "Robot");
+        telemetry.addLine("Hello Robot");
+        telemetry.addData("My name", "Bob");
+        telemetry.addData("W", 1234.5f);
         telemetry.update();
     }
 }
