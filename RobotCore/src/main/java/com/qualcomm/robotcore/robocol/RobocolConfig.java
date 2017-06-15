@@ -39,8 +39,10 @@ import org.firstinspires.ftc.robotcore.internal.network.SendOnceRunnable;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
@@ -80,16 +82,26 @@ public class RobocolConfig {
     ArrayList<InetAddress> localIpAddresses = Network.getLocalIpAddresses();
     localIpAddresses = Network.removeLoopbackAddresses(localIpAddresses);
     localIpAddresses = Network.removeIPv6Addresses(localIpAddresses);
+    int dest = ByteBuffer.wrap(destAddress.getAddress()).getInt();
 
     // if an iface has the destAddress, pick that one
     for (InetAddress address : localIpAddresses) {
       try {
         NetworkInterface iface = NetworkInterface.getByInetAddress(address);
-        Enumeration<InetAddress> ifaceAddresses = iface.getInetAddresses();
-        while (ifaceAddresses.hasMoreElements()) {
-          InetAddress ifaceAddress = ifaceAddresses.nextElement();
-          if (ifaceAddress.equals(destAddress)) {
-            return ifaceAddress; // we found a match
+        for (InterfaceAddress ifa : iface.getInterfaceAddresses()) {
+          if (ifa.getNetworkPrefixLength() > 32) continue;
+          if (ifa.getAddress().equals(destAddress)) {
+            return destAddress; // we found a match
+          }
+          int prefix = ifa.getNetworkPrefixLength();
+          int netmask = 0xFFFFFFFF;
+          for (int i = 0; i < (32 - prefix); i++) {
+            netmask &= ~(1 << i);
+          }
+          int a = (dest & netmask) | ~netmask;
+          int b = ByteBuffer.wrap(ifa.getBroadcast().getAddress()).getInt();
+          if (a == b) {
+            return ifa.getAddress();  // in the same subnet
           }
         }
       } catch (SocketException e) {
