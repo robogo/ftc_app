@@ -86,6 +86,7 @@ import com.qualcomm.robotcore.util.RobotLog;
 import com.qualcomm.robotcore.wifi.NetworkConnectionFactory;
 import com.qualcomm.robotcore.wifi.NetworkType;
 import com.qualcomm.robotcore.wifi.WifiDirectAssistant;
+import com.robogo.EmulatedHardwareFactory;
 
 import org.firstinspires.ftc.ftccommon.external.SoundPlayingRobotMonitor;
 import org.firstinspires.ftc.robotcore.internal.AppUtil;
@@ -106,6 +107,7 @@ public class FtcRobotControllerActivity extends Activity {
 
   private static final int REQUEST_CONFIG_WIFI_CHANNEL = 1;
   private static final int NUM_GAMEPADS = 2;
+  private static final boolean IS_EMULATOR = Build.PRODUCT.contains("Emulator");
 
   protected WifiManager.WifiLock wifiLock;
   protected RobotConfigFileManager cfgFileMgr;
@@ -423,8 +425,7 @@ public class FtcRobotControllerActivity extends Activity {
     // Moreover, the non-Wifi-Direct networking is end-of-life, so the simplest and most robust
     // (e.g.: no one can screw things up by messing with the contents of the config file) fix is
     // to do away with configuration file entirely.
-    String hw = Build.PRODUCT;
-    if (hw.contains("Emulator")) {
+    if (IS_EMULATOR) {
       networkType = NetworkType.WIFI;
     } else {
       networkType = NetworkType.WIFIDIRECT;
@@ -554,7 +555,12 @@ public class FtcRobotControllerActivity extends Activity {
 
     HardwareFactory factory;
     RobotConfigFile file = cfgFileMgr.getActiveConfigAndUpdateUI();
-    HardwareFactory hardwareFactory = new HardwareFactory(context);
+    HardwareFactory hardwareFactory;
+    if (IS_EMULATOR) {
+      hardwareFactory = new EmulatedHardwareFactory(context);
+    } else {
+      hardwareFactory = new HardwareFactory(context);
+    }
     try {
       hardwareFactory.setXmlPullParser(file.getXml());
     } catch (Resources.NotFoundException e) {
