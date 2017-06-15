@@ -42,6 +42,7 @@ import android.content.res.Resources;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -422,8 +423,12 @@ public class FtcRobotControllerActivity extends Activity {
     // Moreover, the non-Wifi-Direct networking is end-of-life, so the simplest and most robust
     // (e.g.: no one can screw things up by messing with the contents of the config file) fix is
     // to do away with configuration file entirely.
-
-    networkType = NetworkType.WIFI;
+    String hw = Build.PRODUCT;
+    if (hw.contains("Emulator")) {
+      networkType = NetworkType.WIFI;
+    } else {
+      networkType = NetworkType.WIFIDIRECT;
+    }
     programmingModeController.setCurrentNetworkType(networkType);
 
     // update the preferences
