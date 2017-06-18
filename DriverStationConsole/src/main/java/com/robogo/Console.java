@@ -28,9 +28,9 @@ public class Console implements DriverStation.EventHandler {
         console.logLevel = level;
         DriverStation ds = new DriverStation();
         ds.setHandler(console);
-        ds.start();
-
         console.gui = new Gui(ds);
+
+        ds.start();
         console.gui.setVisible(true);
     }
 
@@ -42,16 +42,12 @@ public class Console implements DriverStation.EventHandler {
 
     @Override
     public void onOpModeList(String[] opModes) {
-        if (gui != null) {
-            gui.setOpModes(opModes);
-        }
+        gui.setOpModes(opModes);
     }
 
     @Override
     public void OnTelemetry(Telemetry tele) {
-        if (gui != null) {
-            gui.setTelemetry(tele);
-        }
+        gui.setTelemetry(tele);
     }
 
     @Override
@@ -90,7 +86,7 @@ public class Console implements DriverStation.EventHandler {
 
             pack();
             setLocationRelativeTo(null);
-            setSize(300, 200);
+            setSize(300, 250);
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         }
 
@@ -104,14 +100,15 @@ public class Console implements DriverStation.EventHandler {
         }
 
         public void setTelemetry(Telemetry tele) {
-            telemetry.setText("");
-            telemetry.append(String.format("Robot status: %d\n", tele.getRobotState()));
+            StringBuilder sb = new StringBuilder(128);
+            sb.append("Robot status: ").append(tele.getRobotState()).append('\n');
             for (Frame.StringMap.Entry entry : tele.strings().entrySet()) {
-                telemetry.append(String.format("%s\n", entry.getValue()));
+                sb.append(entry.getValue()).append('\n');
             }
             for (Frame.StringMap.Entry entry : tele.numbers().entrySet()) {
-                telemetry.append(String.format("%s=%f\n", entry.getKey(), entry.getValue()));
+                sb.append(entry.getKey()).append('=').append(entry.getValue()).append('\n');
             }
+            telemetry.setText(sb.toString());
         }
 
         @Override
