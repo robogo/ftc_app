@@ -7,12 +7,12 @@ import com.qualcomm.robotcore.hardware.configuration.MotorConfigurationType;
 public class MockDcMotorController implements DcMotorController {
     @Override
     public Manufacturer getManufacturer() {
-        return null;
+        return Manufacturer.Other;
     }
 
     @Override
     public String getDeviceName() {
-        return null;
+        return "motor_controller";
     }
 
     @Override

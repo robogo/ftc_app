@@ -2,15 +2,15 @@ package com.robogo;
 
 import com.qualcomm.robotcore.hardware.LightSensor;
 
-public class MockLightSensor implements LightSensor {
+public class MockLightSensor extends Mock implements LightSensor {
     @Override
     public Manufacturer getManufacturer() {
-        return null;
+        return Manufacturer.Other;
     }
 
     @Override
     public String getDeviceName() {
-        return null;
+        return "light_sensor";
     }
 
     @Override
@@ -35,12 +35,12 @@ public class MockLightSensor implements LightSensor {
 
     @Override
     public double getLightDetected() {
-        return 0;
+        return getData();
     }
 
     @Override
     public double getRawLightDetected() {
-        return 0;
+        return getData();
     }
 
     @Override

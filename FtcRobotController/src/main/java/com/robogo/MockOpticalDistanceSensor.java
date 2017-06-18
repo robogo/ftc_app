@@ -2,15 +2,15 @@ package com.robogo;
 
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 
-public class MockOpticalDistanceSensor implements OpticalDistanceSensor {
+public class MockOpticalDistanceSensor extends Mock implements OpticalDistanceSensor {
     @Override
     public Manufacturer getManufacturer() {
-        return null;
+        return Manufacturer.Other;
     }
 
     @Override
     public String getDeviceName() {
-        return null;
+        return "ods";
     }
 
     @Override
@@ -25,7 +25,6 @@ public class MockOpticalDistanceSensor implements OpticalDistanceSensor {
 
     @Override
     public void resetDeviceConfigurationForOpMode() {
-
     }
 
     @Override
@@ -35,12 +34,12 @@ public class MockOpticalDistanceSensor implements OpticalDistanceSensor {
 
     @Override
     public double getLightDetected() {
-        return 0;
+        return getData();
     }
 
     @Override
     public double getRawLightDetected() {
-        return 0;
+        return getData();
     }
 
     @Override
