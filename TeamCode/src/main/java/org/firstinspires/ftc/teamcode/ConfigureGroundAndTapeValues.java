@@ -24,6 +24,8 @@ public class ConfigureGroundAndTapeValues extends LinearOpMode {
         ods = hardwareMap.opticalDistanceSensor.get("sensor_ods"); // names of the stuff we need to set in the config.
         ods.enableLed(true);
         touch = hardwareMap.touchSensor.get("sensor_touch");
+        telemetry.addLine("ground, tape, then perfect value. press touch button when sensor is on next value");
+        telemetry.update();
         double ground = ods.getLightDetected();
         while (!touch.isPressed()) {
             this.sleep(100);
