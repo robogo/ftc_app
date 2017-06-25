@@ -10,6 +10,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
+import java.io.IOException;
+
 @Autonomous(name = "HelloRobot", group = "Test")
 public class HelloRobot extends LinearOpMode {
     HardwarePushbot robot = new HardwarePushbot();
@@ -22,7 +24,13 @@ public class HelloRobot extends LinearOpMode {
         lineSensor.enableLed(true);
         robot.rightClaw.setPosition(Servo.MIN_POSITION);
         //((Mock)lineSensor).setData(new double[]{5, 5.5}, new double[]{0.5, 0});
-        double ground = lineSensor.getLightDetected();
+        double[] values = null;
+        try {
+            values = OdsValueReader.read();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        double tape = (values[1] + values[0] )/ 2;
         boolean seenTape = false;
         boolean positionedCorrectly = false;
 
@@ -36,20 +44,20 @@ public class HelloRobot extends LinearOpMode {
             // if not over line, go forward with 1.0
             robot.leftMotor.setPower(1);
             robot.rightMotor.setPower(1);
-            if (lightLevel > ground * 1.25) {
+            if (lightLevel > tape) {
                 seenTape = true;
                 robot.leftMotor.setPower(0);
                 robot.rightMotor.setPower(0);
                 telemetry.addData("seen tape", 1);
                 sleep(1000);
-                if (lineSensor.getLightDetected() > ground * 1.25) {
+                if (lineSensor.getLightDetected() > tape) {
                     positionedCorrectly = true;
                     telemetry.addData("arrived", 1);
                 }
             }
             // if over, go backward with 0.1
-            if (seenTape == true && lineSensor.getLightDetected() < ground * 1.25) {
-                while (lineSensor.getLightDetected() < ground * 1.25) {
+            if (seenTape == true && lineSensor.getLightDetected() < tape) {
+                while (lineSensor.getLightDetected() < tape) {
                     robot.rightMotor.setPower(-0.1);
                     robot.leftMotor.setPower(-0.1);
                     telemetry.addData("back", 1);
