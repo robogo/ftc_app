@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
+
 /**
  * Created by xin on 6/11/2017.
  */
@@ -16,10 +17,11 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 // after you press init the sensor has to be sensing the ground. then you have to move it so it only senses the tape. Then press the touch sensor.
 // once both the tape and ground variables appear in telemetry then you can set it on the side of the line and press start
 @Autonomous(name = "ProportionalLineFollower", group = "Aidan")
-public class pll extends LinearOpMode {
+public class ProportionalLineFollower extends LinearOpMode {
     HardwarePushbot robot = new HardwarePushbot();
     OpticalDistanceSensor ods;
     TouchSensor touch;
+    boolean leftTurn;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -58,17 +60,21 @@ public class pll extends LinearOpMode {
             if (correction < 0) {
                 leftPower = (driveSpeed - correction);
                 rightPower = (driveSpeed + correction);
+                leftTurn = true;
             } else {
                 leftPower = driveSpeed - correction;
                 rightPower = driveSpeed + correction;
+                leftTurn = false;
             }
             telemetry.addData("light level", light);
             telemetry.addData("correction", correction);
             telemetry.addData("leftpower", leftPower);
             telemetry.addData("rightpower",rightPower);
             telemetry.update();
+
             robot.leftMotor.setPower(leftPower);
             robot.rightMotor.setPower(rightPower);
+
         }
         //robot.leftMotor.setPower(0);
         // robot.rightMotor.setPower(0);
