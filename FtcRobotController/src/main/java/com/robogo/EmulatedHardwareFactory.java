@@ -28,6 +28,7 @@ public class EmulatedHardwareFactory extends HardwareFactory{
         map.servo.put("left_hand", new MockServo());
         map.servo.put("right_hand", new MockServo());
         map.lightSensor.put("sensor_light", new MockLightSensor());
+        map.touchSensor.put("sensor_touch", new MockTouchSensor());
         map.opticalDistanceSensor.put("sensor_ods", new MockOpticalDistanceSensor());
 
         return map;
