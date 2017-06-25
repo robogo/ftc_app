@@ -49,7 +49,7 @@ public class Device {
    */
   public static boolean isZteSpeed() {
     return Build.MANUFACTURER.equalsIgnoreCase(MANUFACTURER_ZTE) && Build.MODEL.equalsIgnoreCase(MODEL_ZTE_SPEED);
-    }
+  }
 
   /**
    * When running on the ZTE, should we use the ZTE-provided channel-changing utility app,
@@ -65,5 +65,19 @@ public class Device {
    */
   public static boolean wifiP2pRemoteChannelChangeWorks() {
     return !(isZteSpeed() && useZteProvidedWifiChannelEditorOnZteSpeeds());
+  }
+
+  static Boolean emulator = null;
+  public static boolean isEmulator() {
+    if (emulator == null) {
+      if (Build.PRODUCT.contains("Emulator") ||
+              Build.PRODUCT.contains("android_x86") ||
+              Build.HARDWARE.equals("ranchu")) {
+        emulator = true;
+      } else {
+        emulator = false;
+      }
+    }
+    return emulator;
   }
 }

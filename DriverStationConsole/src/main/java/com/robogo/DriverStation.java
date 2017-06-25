@@ -38,13 +38,17 @@ public class DriverStation {
         this.handler = handler;
     }
 
-    public void start() {
+    public void start(String address) {
         try {
-            DatagramSocket test = new DatagramSocket();
-            test.connect(InetAddress.getByName("8.8.8.8"), 10002);
-            InetAddress ip = test.getLocalAddress();
-            test.close();
-
+            InetAddress ip;
+            if (address != null) {
+                ip = InetAddress.getByName(address);
+            } else {
+                DatagramSocket test = new DatagramSocket();
+                test.connect(InetAddress.getByName("8.8.8.8"), 10002);
+                ip = test.getLocalAddress();
+                test.close();
+            }
             announce(ip);
             listen(ip);
         } catch (SocketException e) {
@@ -155,6 +159,7 @@ public class DriverStation {
         byte  messageType = packet.getData()[0];
         switch (messageType) {
             case Frame.EMPTY:
+                log(INFO, "recv Empty");
                 break;
             case Frame.HEARTBEAT:
                 handleHeartbeat(socket, packet);

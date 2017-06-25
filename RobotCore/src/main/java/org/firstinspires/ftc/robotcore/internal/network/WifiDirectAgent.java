@@ -51,6 +51,7 @@ import android.provider.Settings;
 
 import com.qualcomm.robotcore.robocol.Command;
 import com.qualcomm.robotcore.util.ClassUtil;
+import com.qualcomm.robotcore.util.Device;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.Consumer;
@@ -214,11 +215,12 @@ import java.util.List;
 
     public boolean isWifiEnabled()
         {
-        return getWifiState().isEnabled();
+        return Device.isEmulator() || getWifiState().isEnabled();
         }
 
     public boolean isWifiConnected()
         {
+        if (Device.isEmulator()) return true;
         WifiManager m = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         SupplicantState s = m.getConnectionInfo().getSupplicantState();
         NetworkInfo.DetailedState state = WifiInfo.getDetailedStateOf(s);
@@ -229,6 +231,7 @@ import java.util.List;
 
     public boolean isWifiDirectConnected()
         {
+        if (Device.isEmulator()) return true;
         NetworkInfo.State state = getWifiDirectState();
         return state== NetworkInfo.State.CONNECTED || state== NetworkInfo.State.CONNECTING;
         }

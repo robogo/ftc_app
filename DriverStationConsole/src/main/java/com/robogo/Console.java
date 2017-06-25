@@ -18,9 +18,13 @@ public class Console implements DriverStation.EventHandler {
 
     public static void main(String[] args) {
         int level = DriverStation.INFO;
+        String address = null;
         for (int i = 0; i < args.length; i++) {
             if (args[i].equals("--trace") && i < args.length - 1) {
                 level = getTrace(args[i+1]);
+            }
+            if (args[i].equals("--ip") && i < args.length - 1) {
+                address = args[i + 1];
             }
         }
 
@@ -30,7 +34,7 @@ public class Console implements DriverStation.EventHandler {
         ds.setHandler(console);
         console.gui = new Gui(ds);
 
-        ds.start();
+        ds.start(address);
         console.gui.setVisible(true);
     }
 
