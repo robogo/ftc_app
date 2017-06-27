@@ -1,18 +1,16 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.*;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 /**
  * Created by Dan on 6/17/2017.
  */
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "BallPickup", group = "Ryan")
-public class BallPickup extends LinearOpMode {
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "BallPickupUsingEnvLight", group = "Ryan")
+public class BallPickupUsingEnvLight extends LinearOpMode {
     HardwarePushbot robot = new HardwarePushbot();
     OpticalDistanceSensor lightSensor;
 
@@ -23,7 +21,7 @@ public class BallPickup extends LinearOpMode {
     double PerfectColorValue;
     static final double LineFollowingSpeed = 0.2;
 
-    //before initializing, we must put the robot so the ODS sees the white line
+
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -43,8 +41,13 @@ public class BallPickup extends LinearOpMode {
         lightSensor = hardwareMap.opticalDistanceSensor.get("sensor_ods");
         //enable ODS
         lightSensor.enableLed(true);
-        //set perfectColorValue to whatever the ODS sees
-        PerfectColorValue = lightSensor.getLightDetected();
+        EnvLight envColor = new EnvLight();
+        envColor.readFile();
+        telemetry.addData("Line: ", envColor.lineColor);
+        telemetry.addData("Ground: ", envColor.groundColor);
+        telemetry.addData("On Ground? ", envColor.isGround(lightSensor.getLightDetected()));
+        telemetry.update();
+        PerfectColorValue = envColor.threshold;
 
         this.waitForStart();
 
@@ -52,7 +55,7 @@ public class BallPickup extends LinearOpMode {
         robot.leftMotor.setPower(LineFollowingSpeed);
         robot.rightMotor.setPower(LineFollowingSpeed);
         //wait until ODS sees white
-        while (opModeIsActive() && lightSensor.getLightDetected() >= PerfectColorValue) {
+        while (opModeIsActive() && lightSensor.getLightDetected() > PerfectColorValue) {
 
             telemetry.addData("Normal", lightSensor.getLightDetected());
             telemetry.addData("PerfectColorValue", PerfectColorValue);
