@@ -12,56 +12,47 @@ import java.io.IOException;
  */
 
 public class EnvLight {
+    double[] numbers = null;
+    double threshold;
 
-    public static double[] read() throws IOException {
+    public EnvLight read() throws IOException {
         File data = new File(AppUtil.FIRST_FOLDER, "ods.data");
         String content = ReadWriteFile.readFileOrThrow(data);
         String[] values = content.split(",");
-        double[] numbers = new double[values.length];
+        EnvLight light = new EnvLight();
+        light.numbers = new double[values.length];
         for (int i = 0; i < values.length; i++) {
-            numbers[i] = Double.parseDouble(values[i]);
+            light.numbers[i] = Double.parseDouble(values[i]);
         }
-
-        return numbers;
+        light.threshold = (numbers[0] + numbers[1]) / 2;
+        return light;
     }
 
-    public boolean isTapeColorWhite() throws IOException {
-        File data = new File(AppUtil.FIRST_FOLDER, "ods.data");
-        String content = ReadWriteFile.readFileOrThrow(data);
-        String[] values = content.split(",");
-        double[] numbers = new double[values.length];
-        for (int i = 0; i < values.length; i++) {
-            numbers[i] = Double.parseDouble(values[i]);
-        }
-        if (numbers[1] < 0.15) {
+    private boolean isTapeColorWhite() {
+
+        if (numbers[1] < numbers[0]) {
             return false;
         } else {
             return true;
         }
     }
 
-    public boolean isGround(double value) throws IOException {
-        File data = new File(AppUtil.FIRST_FOLDER, "ods.data");
-        String content = ReadWriteFile.readFileOrThrow(data);
-        String[] values = content.split(",");
-        double[] numbers = new double[values.length];
-        if (value < (numbers[0] + numbers[1]) / 2 && isTapeColorWhite() == true) {
+    public boolean isGround(double value) {
+
+        if (value < threshold && isTapeColorWhite() == true) {
             return true;
-        } else if (value > (numbers[0] + numbers[1]) / 2 && isTapeColorWhite() == false) {
+        } else if (value > threshold && isTapeColorWhite() == false) {
             return true;
         } else {
             return false;
         }
     }
 
-    public boolean isLine(double value) throws IOException {
-        File data = new File(AppUtil.FIRST_FOLDER, "ods.data");
-        String content = ReadWriteFile.readFileOrThrow(data);
-        String[] values = content.split(",");
-        double[] numbers = new double[values.length];
-        if (value > (numbers[0] + numbers[1]) / 2 && isTapeColorWhite() == true) {
+    public boolean isLine(double value) {
+
+        if (value > threshold && isTapeColorWhite() == true) {
             return true;
-        } else if (value < (numbers[0] + numbers[1]) / 2 && isTapeColorWhite() == false) {
+        } else if (value < threshold && isTapeColorWhite() == false) {
             return true;
         } else {
             return false;
