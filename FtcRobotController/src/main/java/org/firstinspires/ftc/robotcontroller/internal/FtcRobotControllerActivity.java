@@ -503,6 +503,7 @@ public class FtcRobotControllerActivity extends Activity {
     }
     else if (id == R.id.action_about) {
       Intent intent = new Intent(AboutActivity.launchIntent);
+      intent.setExtrasClassLoader(getClassLoader());
       intent.putExtra(LaunchActivityConstantsList.ABOUT_ACTIVITY_CONNECTION_TYPE, networkType);
       startActivity(intent);
       return true;
