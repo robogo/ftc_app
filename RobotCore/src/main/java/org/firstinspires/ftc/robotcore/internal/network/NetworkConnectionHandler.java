@@ -52,7 +52,6 @@ import com.qualcomm.robotcore.wifi.NetworkConnectionFactory;
 import com.qualcomm.robotcore.wifi.NetworkType;
 import com.qualcomm.robotcore.wifi.SoftApAssistant;
 import com.qualcomm.robotcore.wifi.WifiDirectAssistant;
-import com.qualcomm.robotcore.wifi.WifiNetworkConnection;
 
 import java.net.InetAddress;
 import java.net.SocketException;

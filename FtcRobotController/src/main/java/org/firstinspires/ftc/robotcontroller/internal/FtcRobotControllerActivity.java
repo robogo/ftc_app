@@ -426,7 +426,7 @@ public class FtcRobotControllerActivity extends Activity {
     // (e.g.: no one can screw things up by messing with the contents of the config file) fix is
     // to do away with configuration file entirely.
     if (Device.isEmulator()) {
-      networkType = NetworkType.WIFI;
+      networkType = NetworkType.DEVICE;
     } else {
       networkType = NetworkType.WIFIDIRECT;
     }
