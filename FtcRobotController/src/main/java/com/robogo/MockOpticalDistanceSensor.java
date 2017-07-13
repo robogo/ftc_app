@@ -2,7 +2,12 @@ package com.robogo;
 
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 
-public class MockOpticalDistanceSensor extends Mock implements OpticalDistanceSensor {
+public class MockOpticalDistanceSensor extends SensorMock implements OpticalDistanceSensor {
+
+    public MockOpticalDistanceSensor(EmulatedHardwareFactory factory) {
+        super(factory);
+    }
+
     @Override
     public Manufacturer getManufacturer() {
         return Manufacturer.Other;

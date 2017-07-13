@@ -126,6 +126,7 @@ public class FtcRobotControllerActivity extends Activity {
   protected TextView textDeviceName;
   protected TextView textNetworkConnectionStatus;
   protected TextView textRobotStatus;
+  protected TextView textDeviceStatus;
   protected TextView[] textGamepad = new TextView[NUM_GAMEPADS];
   protected TextView textOpMode;
   protected TextView textErrorMessage;
@@ -259,6 +260,7 @@ public class FtcRobotControllerActivity extends Activity {
     textDeviceName = (TextView) findViewById(R.id.textDeviceName);
     textNetworkConnectionStatus = (TextView) findViewById(R.id.textNetworkConnectionStatus);
     textRobotStatus = (TextView) findViewById(R.id.textRobotStatus);
+    textDeviceStatus = (TextView) findViewById(R.id.textDeviceStatus);
     textOpMode = (TextView) findViewById(R.id.textOpMode);
     textErrorMessage = (TextView) findViewById(R.id.textErrorMessage);
     textGamepad[0] = (TextView) findViewById(R.id.textGamepad1);
@@ -558,7 +560,7 @@ public class FtcRobotControllerActivity extends Activity {
     RobotConfigFile file = cfgFileMgr.getActiveConfigAndUpdateUI();
     HardwareFactory hardwareFactory;
     if (Device.isEmulator()) {
-      hardwareFactory = new EmulatedHardwareFactory(context);
+      hardwareFactory = new EmulatedHardwareFactory(context, this, textDeviceStatus);
     } else {
       hardwareFactory = new HardwareFactory(context);
     }
