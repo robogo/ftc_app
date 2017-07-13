@@ -2,7 +2,12 @@ package com.robogo;
 
 import com.qualcomm.robotcore.hardware.LightSensor;
 
-public class MockLightSensor extends Mock implements LightSensor {
+public class MockLightSensor extends SensorMock implements LightSensor {
+
+    public MockLightSensor(EmulatedHardwareFactory factory) {
+        super(factory);
+    }
+
     @Override
     public Manufacturer getManufacturer() {
         return Manufacturer.Other;

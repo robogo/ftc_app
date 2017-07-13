@@ -3,7 +3,12 @@ package com.robogo;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoController;
 
-public class MockServo implements Servo {
+public class MockServo extends Mock implements Servo {
+
+    public MockServo(EmulatedHardwareFactory factory) {
+        super(factory);
+    }
+
     @Override
     public Manufacturer getManufacturer() {
         return null;
