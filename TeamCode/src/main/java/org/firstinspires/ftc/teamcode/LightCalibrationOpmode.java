@@ -1,58 +1,40 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.*;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
+import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.util.ReadWriteFile;
+import com.robogo.SensorMock;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.internal.AppUtil;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-
-/**
- * Created by Dan on 6/25/2017.
- */
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "LightCalibrationOpmode", group = "Ryan")
-public class LightCalibrationOpmode extends LinearOpMode {
-
-    public double lineColor;
-    public double groundColor;
-    double speed = 0.5;
+@Autonomous(name = "Light Calibration", group = "Aidan")
+public class LightCalibrationOpMode extends LinearOpMode {
     HardwarePushbot robot = new HardwarePushbot();
-
-
-    OpticalDistanceSensor lightSensor;
+    OpticalDistanceSensor ods;
+    TouchSensor touch;
 
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() {
         robot.init(hardwareMap);
-        robot.leftMotor.setDirection(DcMotor.Direction.REVERSE);
-        robot.rightMotor.setDirection(DcMotor.Direction.FORWARD);
-        lightSensor = hardwareMap.opticalDistanceSensor.get("sensor_ods");
-        lightSensor.enableLed(true);
-        lineColor = lightSensor.getLightDetected();
-        this.waitForStart();
-
-        robot.leftMotor.setPower(speed);
-        robot.rightMotor.setPower(speed);
-        sleep(500);
-        robot.leftMotor.setPower(0);
-        robot.rightMotor.setPower(0);
-        groundColor = lightSensor.getLightDetected();
-
-        EnvLight envColors = new EnvLight(lineColor, groundColor);
-        envColors.telemetry = telemetry;
-
-        envColors.writeFile();
-        envColors.readFile();
-
-        sleep(5000);
+        ods = hardwareMap.opticalDistanceSensor.get("sensor_ods"); // names of the stuff we need to set in the config.
+        ods.enableLed(true);
+        touch = hardwareMap.touchSensor.get("sensor_touch");
+        ((SensorMock)touch).setTimeValues(new double[] { 5, 5.5, 10, 10.5 }, new double[] { 1.0, 0.0, 1.0, 0.0 });
+        telemetry.addLine("ground, tape, then perfect value. press touch button when sensor is on next value");
+        telemetry.update();
+        double ground = ods.getLightDetected();
+        while (!touch.isPressed()) {
+            this.sleep(100);
+        }
+        double tape = ods.getLightDetected();
+        while (!touch.isPressed()) {
+            this.sleep(100);
+        }
+        double perfectValue = ods.getLightDetected();
+        String values = String.format("%f,%f,%f", ground, tape, perfectValue);
+        ReadWriteFile.writeFile(AppUtil.FIRST_FOLDER, "ods.data", values);
     }
-
-
-
-
 }
