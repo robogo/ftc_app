@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
+import com.robogo.Mock;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
@@ -39,6 +40,7 @@ public class BallPickupUsingEnvLight extends LinearOpMode {
         robot.rightMotor.setDirection(DcMotor.Direction.FORWARD);
         //define ODS
         lightSensor = hardwareMap.opticalDistanceSensor.get("sensor_ods");
+        ((Mock)lightSensor).setData(new double[] {5, 8}, new double[] {0.4, 0.8});
         //enable ODS
         lightSensor.enableLed(true);
         EnvLight envColor = new EnvLight();
