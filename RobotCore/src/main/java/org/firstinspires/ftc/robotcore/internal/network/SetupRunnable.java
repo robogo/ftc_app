@@ -53,7 +53,7 @@ public class SetupRunnable implements Runnable
                     socket = new RobocolDatagramSocket();
                     socket.listenUsingDestination(networkConnection.getConnectionOwnerAddress());
                     if (socketConnect==SocketConnect.CONNECTION_OWNER ||
-                            networkConnection.getNetworkType() == NetworkType.WIFI) {
+                            networkConnection.getNetworkType() == NetworkType.DEVICE) {
                         socket.connect(networkConnection.getConnectionOwnerAddress());
                     }
                 } catch (SocketException e) {

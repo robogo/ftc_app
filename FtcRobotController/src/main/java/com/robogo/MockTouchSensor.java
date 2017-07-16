@@ -2,15 +2,20 @@ package com.robogo;
 
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
-public class MockTouchSensor extends Mock implements TouchSensor {
+public class MockTouchSensor extends SensorMock implements TouchSensor {
+
+    public MockTouchSensor(EmulatedHardwareFactory factory) {
+        super(factory);
+    }
+
     @Override
     public double getValue() {
-        return 0;
+        return getData();
     }
 
     @Override
     public boolean isPressed() {
-        return false;
+        return getValue() > 0;
     }
 
     @Override

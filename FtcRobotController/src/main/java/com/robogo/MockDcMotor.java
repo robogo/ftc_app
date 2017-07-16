@@ -4,7 +4,12 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.configuration.MotorConfigurationType;
 
-public class MockDcMotor implements DcMotor {
+public class MockDcMotor extends Mock implements DcMotor {
+
+    public MockDcMotor(EmulatedHardwareFactory factory) {
+        super(factory);
+    }
+
     @Override
     public Manufacturer getManufacturer() {
         return Manufacturer.Other;
@@ -117,11 +122,11 @@ public class MockDcMotor implements DcMotor {
 
     @Override
     public void setPower(double power) {
-
+        this.setData(power);
     }
 
     @Override
     public double getPower() {
-        return 0;
+        return this.getData();
     }
 }
