@@ -3,34 +3,50 @@ package com.robogo;
 public class SensorMock extends Mock {
 
     private long start;
-    private double[] time;
-    private double[] values;
+    private DataSource source;
 
     protected SensorMock(EmulatedHardwareFactory factory) {
         super(factory);
     }
 
-    public void setTimeValues(double[] time, double[] values) {
-        this.time = time;
-        this.values = values;
+    public void setTimeValues(double[] seconds, double[] values) {
+        this.source = new TimeValueDataSource(seconds, values);
         this.start = System.nanoTime();
     }
 
-    @Override
+    public void setDataSource(DataSource source) {
+        this.source = source;
+        this.start = System.nanoTime();
+    }
+
     public double getData() {
-        double value = 0.0;
-        if (time != null) {
-            double seconds = (double) (System.nanoTime() - start) / 1000000000.0;
-            for (int i = 0; i < time.length; i++) {
-                if (time[i] > seconds) {
+        if (source == null) {
+            return 0.0;
+        }
+
+        double seconds = (double) (System.nanoTime() - start) / 1000000000.0;
+        return source.getData(seconds);
+    }
+
+    static class TimeValueDataSource implements DataSource {
+        private double[] seconds;
+        private double[] values;
+
+        public TimeValueDataSource(double[] seconds, double[] values) {
+            this.seconds = seconds;
+            this.values = values;
+        }
+
+        @Override
+        public double getData(double time) {
+            double value = 0.0;
+            for (int i = 0; i < seconds.length; i++) {
+                if (seconds[i] > time) {
                     break;
                 }
                 value = values[i];
             }
+            return value;
         }
-
-        this.setData(value);
-
-        return value;
     }
 }
