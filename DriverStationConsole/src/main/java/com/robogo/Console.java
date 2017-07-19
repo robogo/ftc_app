@@ -21,7 +21,7 @@ public class Console implements DriverStation.EventHandler {
         String address = null;
         for (int i = 0; i < args.length; i++) {
             if (args[i].equals("--trace") && i < args.length - 1) {
-                level = getTrace(args[i+1]);
+                level = getTrace(args[i + 1]);
             }
             if (args[i].equals("--ip") && i < args.length - 1) {
                 address = args[i + 1];
@@ -104,6 +104,9 @@ public class Console implements DriverStation.EventHandler {
         }
 
         public void setTelemetry(Telemetry tele) {
+            if (tele.getTag() == null || tele.getTag().startsWith("$")) {
+                return;
+            }
             StringBuilder sb = new StringBuilder(128);
             sb.append("Robot status: ").append(tele.getRobotState()).append('\n');
             for (Frame.StringMap.Entry entry : tele.strings().entrySet()) {
