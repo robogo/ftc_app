@@ -46,6 +46,8 @@ public class EmulatedHardwareFactory extends HardwareFactory{
             map.opticalDistanceSensor.put("sensor_ods", new MockOpticalDistanceSensor(this));
         }
 
+        this.deviceStateChanged();
+
         return map;
     }
 
@@ -56,7 +58,7 @@ public class EmulatedHardwareFactory extends HardwareFactory{
                 if (device instanceof Mock) {
                     sb.append(pair.getKey())
                         .append(":")
-                        .append(((Mock)device).getData())
+                        .append(((Mock)device).getDataDirect())
                         .append("\n");
                 }
             }

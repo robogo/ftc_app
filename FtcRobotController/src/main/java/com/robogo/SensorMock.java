@@ -19,13 +19,16 @@ public class SensorMock extends Mock {
         this.start = System.nanoTime();
     }
 
+    @Override
     public double getData() {
         if (source == null) {
             return 0.0;
         }
 
         double seconds = (double) (System.nanoTime() - start) / 1000000000.0;
-        return source.getData(seconds);
+        double value = source.getData(seconds);
+        this.setData(value);
+        return value;
     }
 
     static class TimeValueDataSource implements DataSource {
