@@ -19,7 +19,7 @@ that supports Hyper-V. Windows 10 Home edition does not support Hyper-V so it ca
 in this setup.
 
 After the emulator is installed, install a profile (as shown in the following image).  
-![alt text](https://github.com/robogo/ftc_app/tree/master/DriverStationConsole/media/ftc-rc-emulator-vs-profile.png "Install Profile")
+![alt text](media/ftc-rc-emulator-vs-profile.png "Install Profile")
 
 Start the installed profile. Make sure the emulated device is connected to the same network as
 where your computer is connected. If not, open Virtual Switch Manager in Hyper-V manager, make
@@ -66,7 +66,7 @@ The DS console also opens a simple UI window where you can see the available OpM
 list. After an OpMode is select, the middle button is enabled, which you can click to INIT/START/STOP
 the OpMode. Telemetry is also sent from RC app to the DS console and is displayed in the bottom
 window.  
-![alt text](https://github.com/robogo/ftc_app/tree/master/DriverStationConsole/media/ftc-ds-console-ui.png "DS Console")
+![alt text](media/ftc-ds-console-ui.png "DS Console")
 
 On HDPI screen the text in the console UI may be too small to read. This is a common issue for Java Swing
 GUI on HDPI screen. Please consoult Google to find the solution.
@@ -134,7 +134,7 @@ advanced control of a sensor.
 
 ## Screen Shots
 The Visual Studio Android Emulator  
-![alt text](https://github.com/robogo/ftc_app/tree/master/DriverStationConsole/media/ftc-rc-emulator-vs.png "VS Emulator")
+![alt text](media/ftc-rc-emulator-vs.png "VS Emulator")
 
 Android x86 in VirtualBox  
-![alt text](https://github.com/robogo/ftc_app/tree/master/DriverStationConsole/media/ftc-rc-emulator-vb.png "VirtualBox & Android x86")
+![alt text](media/ftc-rc-emulator-vb.png "VirtualBox & Android x86")
