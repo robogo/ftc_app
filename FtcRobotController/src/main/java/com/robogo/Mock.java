@@ -13,6 +13,10 @@ public class Mock {
         return data;
     }
 
+    public double getDataDirect() {
+        return data;
+    }
+
     protected void setData(double data) {
         if (this.data != data) {
             this.data = data;
