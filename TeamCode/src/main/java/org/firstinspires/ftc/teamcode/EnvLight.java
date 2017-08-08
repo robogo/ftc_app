@@ -24,7 +24,7 @@ public class EnvLight {
         for (int i = 0; i < values.length; i++) {
             light.numbers[i] = Double.parseDouble(values[i]);
         }
-        light.threshold = (numbers[0] + numbers[1]) / 2;
+        light.threshold = numbers[2];
         return light;
     }
 
