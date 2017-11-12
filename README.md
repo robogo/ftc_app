@@ -1,3 +1,5 @@
+**This fork enables [running the Robot Controller app in Android emulators](DriverStationConsole/README.md) for OpMode development and simulation.**
+
 # ftc_app
 FTC Android Studio project to create FTC Robot Controller app.
 
